@@ -18,8 +18,8 @@
       "full": "FamilySearch App Gallery"
     },
     "icons": {
-      "44": "maps44.png",
-      "88": "maps88.png"
+      "44": "apps44.png",
+      "88": "apps88.png"
     },
     "accentColor" : "#558e6a",
     "configUrl": "https://misbach.github.io/MSTEamsTab/public/tabconfig.html",
