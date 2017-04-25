@@ -5,6 +5,7 @@
 </head>
 <body>
   <h1>FamilySearch App Gallery</h1>
+  <button class="enablebtn">Enable</button>
 
   <script src="https://code.jquery.com/jquery-2.2.4.min.js"
     integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
@@ -16,12 +17,17 @@
     microsoftTeams.settings.registerOnSaveHandler(function(saveEvent) {
       microsoftTeams.settings.setSettings({
         entityID: "AppGallery",
-        contentUrl: "https://misbach.github.io/MSTEamsTab/public/appgallery.html",
+        contentUrl: "https://misbach.github.io/MSTEamsTab/public/tabconfig.html",
         suggestedTabName: "App Gallery",
         websiteUrl: "https://familysearch.org/apps",
         removeUrl: window.location.origin + "/tabremove.html"
       });
       saveEvent.notifySuccess();
+    });
+
+    // Start tab content
+    $('.enablebtn').click(function(){
+      console.log(microsoftTeams.settings.setValidityState(true));
     });
   </script>
 </body>
