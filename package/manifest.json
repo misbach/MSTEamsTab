@@ -28,6 +28,7 @@
   "needsIdentity": false,
   "validDomains": [
       "*.github.com",
-      "*.github.io"
+      "*.github.io",
+      "misbach.github.io"
   ]
 }
