@@ -1,44 +1,54 @@
-<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license. -->
-<!-- See LICENSE in the project root for license information -->
-
 <!DOCTYPE html>
 <html>
-  <body>
-    <form>
-      <input type="radio" name="maptype" value="bing" onclick="onClick()"> Bing Maps
-      <br>
-      <input type="radio" name="maptype" value="google" onclick="onClick()"> Google Maps
-    </form>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+</head>
+<body>
+  <h1>FamilySearch App Gallery</h1>
+  <div>
+    <ul class="applist"></ul>
+  </div>
 
-    <script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+    integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+    crossorigin="anonymous">
+  </script>
+  <script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
+  <script type="text/javascript">
+    microsoftTeams.initialize();
+    microsoftTeams.settings.registerOnSaveHandler(function(saveEvent) {
+      microsoftTeams.settings.setSettings({
+        entityID: "AppGallery",
+        contentUrl: "https://www.bing.com/maps/embed",
+        suggestedTabName: "App Gallery",
+        websiteUrl: "https://familysearch.org/apps",
+        removeUrl: window.location.origin + "/tabremove.html"
+      });
+      saveEvent.notifySuccess();
+    });
 
-    <script type="text/javascript">
-      microsoftTeams.initialize();
-      microsoftTeams.settings.registerOnSaveHandler(function(saveEvent) {
-        var radios = document.getElementsByName('maptype');
-        if (radios[0].checked) {
-          microsoftTeams.settings.setSettings({
-            entityID: "bing",
-            contentUrl: "https://www.bing.com/maps/embed",
-            suggestedTabName: "Bing Map",
-            websiteUrl: "https://www.bing.com/maps",
-            removeUrl: window.location.origin + "/tabremove.html"
-          });
-        } else {
-          microsoftTeams.settings.setSettings({
-            entityID: "google",
-            contentUrl: "https://www.google.com/maps/embed",
-            suggestedTabName: "Google Map",
-            websiteUrl: "https://www.google.com/maps",
-            removeUrl: window.location.origin + "/tabremove.html"
-          });
+    // Start tab content
+    (function() {
+      microsoftTeams.settings.setValidityState(true);
+
+      $.post("https://familysearch.org/apps/api/products/1/1000", function(rsp) {
+        var apps = rsp.feed.entries;
+        // Iterate all apps (except the first one)
+        for(var i=1; i<apps.length; i++) {
+          var summary = JSON.parse(apps[i].summary);
+
+          // Description is embedded in "EN" locale :-/
+          for(var j=0; j<summary.locales.length; j++) {
+            if (summary.locales[j].locale == "en") {
+              console.log(summary, summary.locales[j]);
+              $('.applist').append('<li class="appitem">'+summary.name+'</li>');
+
+            }
+          }
         }
-        saveEvent.notifySuccess();
-      });
+      });
 
-      function onClick() {
-        microsoftTeams.settings.setValidityState(true);
-      }
-    </script>
-  </body>
+    })(); 
+  </script>
+</body>
 </html>
