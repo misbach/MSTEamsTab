@@ -29,6 +29,10 @@
   "validDomains": [
       "*.github.com",
       "*.github.io",
-      "misbach.github.io"
+      "misbach.github.io",
+      "*.familysearch.org",
+      "*.bootstrapcdn.com",
+      "*.jquery.com",
+      "*.microsoft.com"
   ]
 }
