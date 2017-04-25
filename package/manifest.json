@@ -1,9 +1,9 @@
 {
   "$schema": "https://statics.teams.microsoft.com/sdk/v0.4/manifest/MicrosoftTeams.schema.json",
-  "manifestVersion": "0.1",
-  "id": "random-id-1234",
+  "manifestVersion": "0.4",
+  "id": "ec596cda-9b3d-40f3-ab5c-099d85f58f85",
   "version": "1.0",
-  "name": "Maps",
+  "name": "AppGallery",
   "developer": {
       "name": "FamilySearch",
       "websiteUrl": "https://familysearch.org/apps",
@@ -11,8 +11,8 @@
       "termsOfUseUrl": "https://familysearch.org/terms"
   },
   "tabs" : [{
-    "id": "random-id-1234",
-    "name": "App Gallery",
+    "id": "ec596cda-9b3d-40f3-ab5c-099d85f58f85",
+    "name": "AppGallery",
     "description" : {
       "short": "App Gallery",
       "full": "FamilySearch App Gallery"
@@ -22,13 +22,14 @@
       "88": "maps88.png"
     },
     "accentColor" : "#558e6a",
-    "configUrl": "https://raw.githubusercontent.com/misbach/MSTEamsTab/master/public/tabconfig.html",
+    "configUrl": "https://misbach.github.io/MSTEamsTab/public/tabconfig.html",
     "canUpdateConfig": true
   }],
   "needsIdentity": false,
   "validDomains": [
       "*.bing.com",
       "*.google.com",
-      "*.github.com"
+      "*.github.com",
+      "*.github.io"
   ]
 }

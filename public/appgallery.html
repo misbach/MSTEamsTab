@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+</head>
+<body>
+  <h1>FamilySearch App Gallery</h1>
+  <div>
+    <ul class="applist"></ul>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+    integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+    crossorigin="anonymous">
+  </script>
+  <script type="text/javascript">
+    (function() {
+      $.post("https://familysearch.org/apps/api/products/1/1000", function(rsp) {
+        var apps = rsp.feed.entries;
+        // Iterate all apps (except the first one)
+        for(var i=1; i<apps.length; i++) {
+          var summary = JSON.parse(apps[i].summary);
+
+          // Description is embedded in "EN" locale :-/
+          for(var j=0; j<summary.locales.length; j++) {
+            if (summary.locales[j].locale == "en") {
+              console.log(summary, summary.locales[j]);
+              $('.applist').append('<li class="appitem">'+summary.name+'</li>');
+
+            }
+          }
+        }
+      });
+    })(); 
+  </script>
+</body>
+</html>
