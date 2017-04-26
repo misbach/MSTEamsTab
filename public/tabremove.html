@@ -1,27 +1,21 @@
 <!DOCTYPE html>
 <html>
   <body>
-    <form>
-      <input type="radio" name="removetype" value="delete" onclick="onClick()">Delete this map and all data the team added to it?
-      <br>
-      <input type="radio" name="removetype" value="keep" onclick="onClick()">Keep this map available for use at <a href='https://maps.bing.com' target='_blank'>https://maps.bing.com</a>
-    </form>
+
+  <button onclick="remove()">Remove</button>
 
     <script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
 
     <script type="text/javascript">
+    function remove() {
       microsoftTeams.initialize();
       microsoftTeams.settings.registerOnRemoveHandler(function(removeEvent) {
-        var radios = document.getElementsByName('removetype');
-        if (radios[0].checked) {
-          // Delete the map and all its data from the underlying service.
-        }
         removeEvent.notifySuccess();
       });
 
-      function onClick() {
-        microsoftTeams.settings.setValidityState(true);
-      }
+      microsoftTeams.settings.setValidityState(true);
+      console.log("Removed!");
+    }
     </script>
   </body>
 </html>
