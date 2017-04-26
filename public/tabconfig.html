@@ -1,35 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
-</head>
+<head></head>
 <body>
   <h1>FamilySearch App Gallery</h1>
-  <button class="enablebtn">Enable</button>
+  <button onclick="save()">Enable</button>
 
-  <script src="https://code.jquery.com/jquery-2.2.4.min.js"
-    integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-    crossorigin="anonymous">
-  </script>
   <script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
   <script type="text/javascript">
-    microsoftTeams.initialize();
-    microsoftTeams.settings.registerOnSaveHandler(function(saveEvent) {
-      microsoftTeams.settings.setSettings({
-        entityID: "AppGallery",
-        contentUrl: "https://misbach.github.io/MSTEamsTab/public/appgallery.html",
-        suggestedTabName: "AppGallery",
-        websiteUrl: "https://familysearch.org/apps",
-        removeUrl: "https://misbach.github.io/MSTEamsTab/public/tabremove.html"
+    function save() {
+      microsoftTeams.initialize();
+      microsoftTeams.settings.registerOnSaveHandler(function(saveEvent) {
+        microsoftTeams.settings.setSettings({
+          entityID: "AppGallery",
+          contentUrl: "https://misbach.github.io/MSTEamsTab/public/appgallery.html",
+          suggestedTabName: "AppGallery",
+          websiteUrl: "https://familysearch.org/apps",
+          removeUrl: "https://misbach.github.io/MSTEamsTab/public/tabremove.html"
+        });
+        saveEvent.notifySuccess();
       });
-      saveEvent.notifySuccess();
-    });
 
-    // Start tab content
-    $('.enablebtn').click(function(){
       microsoftTeams.settings.setValidityState(true);
       console.log("Done!");
-    });
+    }
   </script>
 </body>
 </html>
