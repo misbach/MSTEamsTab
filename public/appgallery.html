@@ -2,35 +2,174 @@
 <html>
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>FamilySearch App Gallery</h1>
-  <div>
-    <ul class="applist"></ul>
+	<div class="container">
+	  <h1><img src="logo.svg" height="100px"> App Gallery Lookup</h1>
+	  <dir>
+			<input class="typeahead" type="text" placeholder="App Name">
+	  </dir>
+
+	  <div class="row">
+	    <div class="col-8">
+				<form>
+					<div class="form-group row">
+					  <label class="col-2 col-form-label">Name</label>
+					  <div class="col-10 name"></div>
+					</div>
+					<div class="form-group row">
+					  <label class="col-2 col-form-label">Summary</label>
+					  <div class="col-10 summary"></div>
+					</div>
+					<div class="form-group row">
+					  <label class="col-2 col-form-label">Description</label>
+					  <div class="col-10 description"></div>
+					</div>
+					<div class="form-group row">
+					  <label class="col-2 col-form-label">Platform</label>
+					  <div class="col-10 platform"></div>
+					</div>
+					<div class="form-group row">
+					  <label class="col-2 col-form-label">Price</label>
+					  <div class="col-10 price"></div>
+					</div>
+					<div class="form-group row">
+					  <label class="col-2 col-form-label">Categories</label>
+					  <div class="col-10 category"></div>
+					</div>
+					<div class="form-group row">
+					  <label class="col-2 col-form-label">Tags</label>
+					  <div class="col-10 tags"></div>
+					</div>
+					<div class="form-group row">
+					  <label class="col-2 col-form-label">Version</label>
+					  <div class="col-10 version"></div>
+					</div>
+					<div class="form-group row">
+					  <label class="col-2 col-form-label">Status</label>
+					  <div class="col-10 status"></div>
+					</div>
+					<div class="form-group row">
+					  <label class="col-2 col-form-label">Certified</label>
+					  <div class="col-10 certified"></div>
+					</div>
+				</form>
+	    </div>
+	    <div class="col-4 images">
+	    </div>
+	  </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-2.2.4.min.js"
-    integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-    crossorigin="anonymous">
-  </script>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="typeahead.jquery.js"></script>
   <script type="text/javascript">
-    (function() {
-      $.post("https://familysearch.org/apps/api/products/1/1000", function(rsp) {
-        var apps = rsp.feed.entries;
-        // Iterate all apps (except the first one)
-        for(var i=1; i<apps.length; i++) {
-          var summary = JSON.parse(apps[i].summary);
+  	var apps = [];
 
-          // Description is embedded in "EN" locale :-/
-          for(var j=0; j<summary.locales.length; j++) {
-            if (summary.locales[j].locale == "en") {
-              console.log(summary, summary.locales[j]);
-              $('.applist').append('<li class="appitem">'+summary.name+'</li>');
-            }
+  	// Get apps from cache if exist, otherwise hit API
+  	var tmp = localStorage.getItem('apps');
+  	if (tmp != null) {
+  		apps = JSON.parse(tmp);
+  		console.log("Cache!");
+  	}
+
+		typeAhead();
+
+  	// Get app list
+    $.post("https://familysearch.org/apps/api/products/1/1000", function(rsp) {
+      // Build apps array (Iterate all apps, except the first one)
+      for(var i=1; i<rsp.feed.entries.length; i++) {
+        var summary = JSON.parse(rsp.feed.entries[i].summary);
+
+        // Description is embedded in "EN" locale :-/
+        for(var j=0; j<summary.locales.length; j++) {
+          if (summary.locales[j].locale == "en") {
+          	// Combine both objects into one.
+          	var appMeta = Object.assign(summary, summary.locales[j]);
+          	// Add links to images
+          	appMeta.links = rsp.feed.entries[i].links;
+            apps.push({ name: summary.name, meta: appMeta });
           }
         }
-      });
-    })(); 
+      }
+
+      // Clean/massage objects
+      for (var i=0; i<apps.length; i++) {
+      	delete apps[i].meta.locales;
+      }
+      // Save to local storage
+      localStorage.setItem('apps', JSON.stringify(apps));
+    });
+
+    function typeAhead() {
+      // Type ahead logic
+	    var substringMatcher = function(strs) {
+			  return function findMatches(q, cb) {
+			    var matches, substringRegex;
+			    // an array that will be populated with substring matches
+			    matches = [];
+			    // regex used to determine if a string contains the substring `q`
+			    substrRegex = new RegExp(q, 'i');
+			    // iterate through the pool of strings and for any string that
+			    // contains the substring `q`, add it to the `matches` array
+			    $.each(strs, function(i, str) {
+			      if (substrRegex.test(str.name)) {
+			        matches.push(str);
+			      }
+			    });
+			    cb(matches);
+			  };
+			};
+
+			$('.typeahead').typeahead({
+			  hint: true,
+			  highlight: true,
+			  minLength: 1
+			},
+			{
+			  display: 'name',
+			  source: substringMatcher(apps)
+			});
+
+			// Display selected app info
+			$('.typeahead').change(function(e) {
+        for (var i=0; i<apps.length; i++) {
+        	if (apps[i].name == e.target.value) {
+        		$('.name').html('<a href="'+apps[i].meta.downloadLink+'" target="_blank">'+apps[i].meta.name+'</a>');
+        		$('.summary').html(apps[i].meta.summary);
+        		$('.description').html(apps[i].meta.description);
+        		$('.platform').html(apps[i].meta.platform);
+        		$('.price').html(apps[i].meta.pricing[0].paymentType+" "+apps[i].meta.pricing[0].value);
+        		$('.version').html(apps[i].meta.productVersion);
+        		$('.status').html(apps[i].meta.status);
+        		$('.certified').html(apps[i].meta.IsFamilySearchCertified);
+        		$('.tags').html(apps[i].meta.tags[0].name);
+
+        		// Images
+        		$('.images').html('');
+        		for (var j=0; j<apps[i].meta.links.length; j++) {
+        			if (apps[i].meta.links[j].type == "image/*") {
+        				$('.images').append('<img src="'+apps[i].meta.links[j].href+'" width="250px">');
+        			}
+        		}
+        		// Categories
+    				$('.category').html('');
+        		for (var j=0; j<apps[i].meta.categories.length; j++) {
+      				$('.category').append(apps[i].meta.categories[j]+', ');
+        		}
+
+        		// Tags
+    				$('.tags').html('');
+        		for (var j=0; j<apps[i].meta.tags.length; j++) {
+      				$('.tags').append(apps[i].meta.tags[j].name+', ');
+        		}
+
+        		console.log(apps[i].meta);
+        		break;
+        	}
+        }
+  		});
+    }
   </script>
 </body>
 </html>

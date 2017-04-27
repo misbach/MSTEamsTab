@@ -21,7 +21,7 @@
       "44": "apps44.png",
       "88": "apps88.png"
     },
-    "accentColor" : "#558e6a",
+    "accentColor" : "#85B80A",
     "configUrl": "https://misbach.github.io/MSTEamsTab/public/tabconfig.html",
     "canUpdateConfig": true
   }],
@@ -31,6 +31,7 @@
       "*.github.io",
       "misbach.github.io",
       "*.familysearch.org",
+      "familysearch.org",
       "*.bootstrapcdn.com",
       "*.jquery.com",
       "*.microsoft.com"
