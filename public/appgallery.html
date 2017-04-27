@@ -8,7 +8,7 @@
 	<div class="container">
 	  <h1><img src="logo.svg" height="100px"> App Gallery Lookup</h1>
 	  <dir>
-			<input class="typeahead" type="text" placeholder="App Name">
+			<input class="typeahead form-control" type="text" placeholder="App Name">
 	  </dir>
 
 	  <div class="row">
@@ -132,7 +132,7 @@
 			});
 
 			// Display selected app info
-			$('.typeahead').change(function(e) {
+			$('.typeahead').on("change keyup", function(e) {
         for (var i=0; i<apps.length; i++) {
         	if (apps[i].name == e.target.value) {
         		$('.name').html('<a href="'+apps[i].meta.downloadLink+'" target="_blank">'+apps[i].meta.name+'</a>');
