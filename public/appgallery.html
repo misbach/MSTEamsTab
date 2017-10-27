@@ -76,7 +76,7 @@
 		typeAhead();
 
   	// Get app list
-    $.post("https://familysearch.org/apps/api/products/1/1000", function(rsp) {
+    $.post("https://www.familysearch.org/apps/api/products/1/1000", function(rsp) {
       // Build apps array (Iterate all apps, except the first one)
       for(var i=1; i<rsp.feed.entries.length; i++) {
         var summary = JSON.parse(rsp.feed.entries[i].summary);
